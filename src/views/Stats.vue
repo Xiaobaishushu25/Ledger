@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="stats-page">
     <n-card size="small">
       <div style="font-weight:700; font-size:14px;">收支总览</div>
       <div class="stat-grid">
@@ -44,6 +44,7 @@ onMounted(async ()=> { stats.value = await api.getStats(); });
 </script>
 
 <style scoped>
+.stats-page { display:flex; flex-direction:column; gap:0; padding-bottom:8px; }
 .stat-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:12px; }
 .row { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#F9FAFB; border-radius:8px; border:1px solid #EEF0F3; gap:8px; flex-wrap: wrap; }
 @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }

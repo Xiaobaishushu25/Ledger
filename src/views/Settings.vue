@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="settings-page">
     <n-card size="small">
       <div style="display:flex; justify-content:space-between; align-items:center">
         <div style="font-weight:700">类别管理</div>

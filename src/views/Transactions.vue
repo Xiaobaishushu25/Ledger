@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tx-page">
     <!-- Summary Cards -->
     <div class="cards">
       <n-card size="small" class="card">
@@ -20,7 +20,7 @@
     </div>
 
     <!-- Filter Bar -->
-    <n-card size="small" style="margin-top:14px">
+    <n-card size="small" class="filter-card" style="margin-top:14px">
       <div class="filter-bar">
         <n-input v-model:value="filter.keyword" placeholder="搜索说明 / 备注" clearable class="f-keyword" @update:value="load" />
         <n-select v-model:value="filter.type_" placeholder="收支" clearable :options="typeOpts" class="f-type" @update:value="load" />
@@ -32,8 +32,8 @@
       </div>
     </n-card>
 
-    <!-- Table -->
-    <n-card size="small" style="margin-top:12px">
+    <!-- Table - 内部独立滚动，像原生应用 -->
+    <n-card size="small" class="table-card">
       <div class="table-wrap">
         <n-data-table :columns="columns" :data="items" :pagination="pagination" :loading="loading" :row-key="(r:any)=>r.id" size="small" :scroll-x="900" />
       </div>
@@ -191,27 +191,82 @@ onMounted(async ()=>{
 </script>
 
 <style scoped>
-.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+/* 流水页：撑满主容器，卡片固定，表格区内部滚动 */
+.tx-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex-shrink: 0; }
 .card-label { font-size: 11px; color:#8A8FA3; letter-spacing: .04em; }
 .card-value { font-size: clamp(16px, 2.2vw, 22px); font-weight: 800; margin-top: 6px; word-break: break-all; }
 .card-hint { font-size: 11px; color:#A0A6B8; margin-top: 4px; }
+.filter-card { flex-shrink: 0; }
 .filter-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .f-keyword { flex: 1 1 180px; min-width: 160px; max-width: 260px; }
 .f-type { flex: 0 1 120px; min-width: 110px; }
 .f-cat { flex: 0 1 140px; min-width: 120px; }
 .f-range { flex: 1 1 240px; min-width: 200px; max-width: 300px; }
 .f-spacer { flex: 1 0 8px; min-width: 0; }
-.table-wrap { width: 100%; overflow-x: auto; }
+
+/* 表格卡片：占满剩余高度，内部滚动 */
+.table-card {
+  flex: 1;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.table-card :deep(.n-card__content) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 8px;
+}
+.table-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.table-wrap :deep(.n-data-table) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.table-wrap :deep(.n-data-table-wrapper) {
+  flex: 1;
+  min-height: 0;
+}
+.table-wrap :deep(.n-data-table-base-table-body) {
+  scrollbar-width: thin;
+  scrollbar-color: #D5D8E2 transparent;
+}
+.table-wrap :deep(.n-data-table__pagination) {
+  flex-shrink: 0;
+  padding-top: 10px;
+  border-top: 1px solid #F0F1F5;
+  margin-top: 8px;
+}
+
 .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 @media (max-width: 900px) {
   .cards { grid-template-columns: repeat(2, 1fr); }
   .f-spacer { display: none; }
   .filter-bar { row-gap: 10px; }
+  .table-card { min-height: 320px; }
 }
 @media (max-width: 560px) {
   .cards { grid-template-columns: 1fr; }
   .f-keyword, .f-type, .f-cat, .f-range { flex: 1 1 100%; max-width: 100%; min-width: 0; }
   .filter-bar .n-button { flex: 1 1 48%; }
   .img-grid { grid-template-columns: 1fr; }
+  .table-card :deep(.n-card__content) { padding: 8px 8px 6px; }
 }
 </style>
